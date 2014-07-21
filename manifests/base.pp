@@ -48,10 +48,10 @@ node 'sensu-server' {
   }
 
   sensu::check { 'check_crond_alive':
-    command     => '/etc/sensu/plugins/check-procs.rb -p crond -W 1',
+    command     => 'cd /vagrant/infrastructure-tests && ruby -S rspec spec/localhost',
     handlers    => 'default',
     subscribers => 'sensu-test',
-    interval    => 5,
+    interval    => 10,
     standalone  => false,
   }
 
