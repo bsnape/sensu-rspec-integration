@@ -1,0 +1,34 @@
+FORGE
+  remote: https://forgeapi.puppetlabs.com
+  specs:
+    garethr/erlang (0.3.0)
+      puppetlabs/apt (>= 0)
+      puppetlabs/stdlib (>= 0)
+      stahnma/epel (>= 0)
+    maestrodev/wget (1.4.4)
+    nanliu/staging (0.4.1)
+    puppetlabs/apt (1.5.1)
+      puppetlabs/stdlib (>= 2.2.1)
+    puppetlabs/gcc (0.2.0)
+    puppetlabs/ntp (3.1.2)
+      puppetlabs/stdlib (>= 4.0.0)
+    puppetlabs/rabbitmq (4.0.0)
+      nanliu/staging (>= 0.3.1)
+      puppetlabs/apt (>= 1.0.0)
+      puppetlabs/stdlib (>= 2.0.0)
+    puppetlabs/stdlib (4.3.0)
+    sensu/sensu (1.0.0)
+      puppetlabs/apt (>= 0.0.1)
+      puppetlabs/stdlib (>= 0.0.1)
+    stahnma/epel (0.1.0)
+    thomasvandoren/redis (0.10.0)
+      maestrodev/wget (>= 1.1.0)
+      puppetlabs/gcc (>= 0.0.3)
+
+DEPENDENCIES
+  garethr/erlang (>= 0)
+  puppetlabs/ntp (>= 0)
+  puppetlabs/rabbitmq (>= 0)
+  sensu/sensu (>= 0)
+  thomasvandoren/redis (>= 0)
+
