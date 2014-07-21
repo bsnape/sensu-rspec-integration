@@ -18,7 +18,7 @@ node 'sensu-server' {
 
   rabbitmq_vhost { '/sensu':
     ensure  => present,
-    require =>  Class['::rabbitmq']
+    require => Class['::rabbitmq']
   }
 
   rabbitmq_user { 'sensu':
@@ -76,18 +76,39 @@ node 'sensu-server' {
 
 node 'sensu-client' {
 
+  Exec { path => "/bin:/sbin:/usr/bin:/usr/sbin" }
+
   class { 'sensu':
     rabbitmq_password => 'password',
     rabbitmq_host     => '33.33.33.90',
     rabbitmq_port     => '5672',
     subscriptions     => 'sensu-test',
     plugins           => ['puppet:///modules/data/plugins/check-procs.rb'],
-    require           => Package['sensu-plugin']
+    require           => Package['sensu-plugin'],
   }
 
   package { 'sensu-plugin':
     ensure   => 'installed',
     provider => 'gem',
+  }
+
+  package { 'bundler':
+    ensure   => 'installed',
+    provider => 'gem',
+  }
+
+  vcsrepo { "/vagrant/infrastructure-tests":
+    ensure   => latest,
+    provider => git,
+    source   => 'https://github.com/ITV/infrastructure-tests.git',
+    revision => 'master',
+    require  => Exec['bundle install'],
+  }
+
+  exec { 'bundle install':
+    command => 'bundle install',
+    cwd     => '/vagrant/infrastructure-tests',
+    returns => 0,
   }
 
 }
