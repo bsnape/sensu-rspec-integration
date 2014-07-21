@@ -35,14 +35,16 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
-    rabbitmq_password => 'password',
-    rabbitmq_host     => 'sensu-server',
-    rabbitmq_port     => '5672',
-    client            => false,
-    server            => true,
-    dashboard         => true,
-    api               => true,
-    require           => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
+    rabbitmq_password  => 'password',
+    rabbitmq_host      => 'sensu-server',
+    rabbitmq_port      => '5672',
+    client             => false,
+    server             => true,
+    dashboard          => true,
+    api                => true,
+    dashboard_user     => '',
+    dashboard_password => '',
+    require            => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
   }
 
   sensu::check { 'check_crond_alive':
