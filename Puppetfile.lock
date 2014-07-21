@@ -17,6 +17,7 @@ FORGE
       puppetlabs/apt (>= 1.0.0)
       puppetlabs/stdlib (>= 2.0.0)
     puppetlabs/stdlib (4.3.0)
+    puppetlabs/vcsrepo (1.1.0)
     sensu/sensu (1.0.0)
       puppetlabs/apt (>= 0.0.1)
       puppetlabs/stdlib (>= 0.0.1)
@@ -29,6 +30,7 @@ DEPENDENCIES
   garethr/erlang (>= 0)
   puppetlabs/ntp (>= 0)
   puppetlabs/rabbitmq (>= 0)
+  puppetlabs/vcsrepo (>= 0)
   sensu/sensu (>= 0)
   thomasvandoren/redis (>= 0)
 
