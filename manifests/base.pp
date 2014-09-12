@@ -48,11 +48,11 @@ node 'sensu-server' {
     require            => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
   }
 
-  sensu::check { 'check_crond_alive':
-    command     => 'cd /vagrant/infrastructure-tests && ruby -S rspec spec/localhost',
+  sensu::check { 'rspec_tests':
+    command     => '/etc/sensu/plugins/check-rspec.rb -d /tmp/example-sensu-rspec-tests/spec',
     handlers    => 'default',
     subscribers => 'sensu-test',
-    interval    => 10,
+    interval    => 5,
     standalone  => false,
   }
 
@@ -84,7 +84,7 @@ node 'sensu-client' {
     rabbitmq_host     => '33.33.33.90',
     rabbitmq_port     => '5672',
     subscriptions     => 'sensu-test',
-    plugins           => ['puppet:///modules/data/plugins/check-procs.rb'],
+    plugins           => ['puppet:///modules/data/plugins/check-rspec.rb'],
     require           => Package['sensu-plugin'],
   }
 
