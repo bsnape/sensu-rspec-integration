@@ -98,18 +98,18 @@ node 'sensu-client' {
     provider => 'gem',
   }
 
-  vcsrepo { "/vagrant/infrastructure-tests":
+  vcsrepo { "/tmp/example-sensu-rspec-tests":
     ensure   => latest,
     provider => git,
-    source   => 'https://github.com/ITV/infrastructure-tests.git',
+    source   => 'https://github.com/bsnape/example-sensu-rspec-tests.git',
     revision => 'master',
-    require  => Exec['bundle install'],
   }
 
   exec { 'bundle install':
     command => 'bundle install',
-    cwd     => '/vagrant/infrastructure-tests',
+    cwd     => '/tmp/example-sensu-rspec-tests',
     returns => 0,
+    require => Vcsrepo['/tmp/example-sensu-rspec-tests'],
   }
 
 }
