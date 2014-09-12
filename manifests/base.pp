@@ -35,6 +35,7 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
+    version            => '0.11.0-1',
     rabbitmq_password  => 'password',
     rabbitmq_host      => 'sensu-server',
     rabbitmq_port      => '5672',
