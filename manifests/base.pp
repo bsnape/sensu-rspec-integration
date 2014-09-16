@@ -88,6 +88,11 @@ node 'sensu-client' {
     require           => Package['sensu-plugin'],
   }
 
+  package { 'ruby-devel':
+    ensure   => 'installed',
+    provider => 'yum',
+  }
+
   package { 'sensu-plugin':
     ensure   => 'installed',
     provider => 'gem',
@@ -109,7 +114,7 @@ node 'sensu-client' {
     command => 'bundle install',
     cwd     => '/tmp/example-sensu-rspec-tests',
     returns => 0,
-    require => Vcsrepo['/tmp/example-sensu-rspec-tests'],
+    require => [Vcsrepo['/tmp/example-sensu-rspec-tests'], package['ruby-devel']]
   }
 
 }
