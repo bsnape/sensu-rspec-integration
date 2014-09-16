@@ -49,7 +49,7 @@ node 'sensu-server' {
   }
 
   sensu::check { 'rspec_tests':
-    command     => '/etc/sensu/plugins/check-rspec.rb -d /tmp/example-sensu-rspec-tests/spec',
+    command     => '/etc/sensu/plugins/check-rspec.rb -b ruby -i rspec -d /tmp/example-sensu-rspec-tests -s spec',
     handlers    => 'default',
     subscribers => 'sensu-test',
     interval    => 5,
