@@ -4,7 +4,8 @@
 # ===
 #
 # Runs RSpec tests.
-# Fails with a critical if tests are failing.
+# Raises a warning event for each individual failed test.
+# Also raises a single critical event if tests are failing.
 #
 # Examples:
 #
@@ -13,6 +14,7 @@
 #
 #   # Run only one set of tests
 #   check-rspec -d /tmp/my_tests/spec/test_one
+#
 
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'json'
@@ -22,10 +24,30 @@ require 'sensu-plugin/check/cli'
 
 class CheckRspec < Sensu::Plugin::Check::CLI
 
-  option :spec_dir,
-         :short    => '-d /tmp/my_tests/spec',
-         :long     => '--spec-dir /tmp/my_tests/spec',
+  option :ruby_bin,
+         :short   => '-b ruby',
+         :long    => '--ruby-bin ruby',
+         :default => 'ruby'
+
+  option :rspec_bin,
+         :short   => '-i rspec',
+         :long    => '--rspec-bin rspec',
+         :default => 'rspec'
+
+  option :tests_dir,
+         :short    => '-d /tmp/my_tests',
+         :long     => '--tests-dir /tmp/my_tests',
          :required => true
+
+  option :spec_dir,
+         :short   => '-s spec',
+         :long    => '--spec-dir spec',
+         :default => 'spec'
+
+  option :environment_variables,
+         :short    => '-e ENVIRONMENT=sit',
+         :long     => '--env-var ENVIRONMENT=sit',
+         :required => false
 
   option :handler,
          :short   => '-l HANDLER',
@@ -38,22 +60,20 @@ class CheckRspec < Sensu::Plugin::Check::CLI
   end
 
   def send_ok(check_name, msg)
-    d = { 'name' => check_name, 'status' => 0, 'output' => 'OK: ' + msg, 'handler' => config[:handler] }
+    d = { 'name' => check_name, 'status' => 0, 'output' => "OK: #{msg}", 'handler' => config[:handler] }
     sensu_client_socket d.to_json
   end
 
   def send_warning(check_name, msg)
-    d = { 'name' => check_name, 'status' => 1, 'output' => 'WARNING: ' + msg, 'handler' => config[:handler] }
-    sensu_client_socket d.to_json
-  end
-
-  def send_critical(check_name, msg)
-    d = { 'name' => check_name, 'status' => 2, 'output' => 'CRITICAL: ' + msg, 'handler' => config[:handler] }
+    d = { 'name' => check_name, 'status' => 1, 'output' => "WARNING: #{msg}", 'handler' => config[:handler] }
     sensu_client_socket d.to_json
   end
 
   def run
-    rspec_results = `ruby -S rspec #{config[:spec_dir]} --format json`
+    cd  = "cd #{config[:tests_dir]};"
+    run = "#{config[:environment_variables]} #{config[:ruby_bin]} -S #{config[:rspec_bin]} #{config[:spec_dir]}"
+
+    rspec_results = `#{cd} #{run}`
     parsed        = JSON.parse(rspec_results)
 
     parsed['examples'].each do |rspec_test|
@@ -67,10 +87,10 @@ class CheckRspec < Sensu::Plugin::Check::CLI
       end
     end
 
-    puts parsed['summary_line']
-
     summary       = parsed['summary_line']
     failure_count = summary.split[2]
+
+    puts summary
 
     if failure_count == '0'
       exit_with(:ok, summary)
