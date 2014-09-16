@@ -71,7 +71,7 @@ class CheckRspec < Sensu::Plugin::Check::CLI
 
   def run
     cd  = "cd #{config[:tests_dir]};"
-    run = "#{config[:environment_variables]} #{config[:ruby_bin]} -S #{config[:rspec_bin]} #{config[:spec_dir]}"
+    run = "#{config[:environment_variables]} #{config[:ruby_bin]} -S #{config[:rspec_bin]} #{config[:spec_dir]} -f json"
 
     rspec_results = `#{cd} #{run}`
     parsed        = JSON.parse(rspec_results)
