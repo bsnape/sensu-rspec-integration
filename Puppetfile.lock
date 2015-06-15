@@ -25,6 +25,9 @@ FORGE
     thomasvandoren/redis (0.10.0)
       maestrodev/wget (>= 1.1.0)
       puppetlabs/gcc (>= 0.0.3)
+    yelp/uchiwa (0.3.0)
+      puppetlabs/apt (>= 0)
+      puppetlabs/stdlib (>= 0)
 
 DEPENDENCIES
   garethr/erlang (>= 0)
@@ -33,4 +36,5 @@ DEPENDENCIES
   puppetlabs/vcsrepo (>= 0)
   sensu/sensu (>= 0)
   thomasvandoren/redis (>= 0)
+  yelp/uchiwa (>= 0)
 
