@@ -84,6 +84,10 @@ node 'sensu-server' {
   class { 'uchiwa':
     sensu_api_endpoints => $uchiwa_api_config,
   }
+
+  class { 'timezone':
+    timezone => 'UTC',
+  }
 }
 
 
@@ -115,4 +119,7 @@ node 'sensu-client' {
     revision => 'master',
   }
 
+  class { 'timezone':
+    timezone => 'UTC',
+  }
 }
