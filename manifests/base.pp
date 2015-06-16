@@ -35,17 +35,19 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
-    version            => '0.11.0-1',
+    version            => 'latest',
     rabbitmq_password  => 'password',
     rabbitmq_host      => 'sensu-server',
-    rabbitmq_port      => '5672',
+    install_repo       => false,
     client             => false,
     server             => true,
-    dashboard          => true,
     api                => true,
-    dashboard_user     => '',
-    dashboard_password => '',
-    require            => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
+    require            => [Class['::rabbitmq'], Class['::redis']],
+  }
+
+  package { 'sensu-plugin':
+    ensure   => 'installed',
+    provider => 'gem',
   }
 
   sensu::check { 'rspec_tests':
@@ -67,11 +69,21 @@ node 'sensu-server' {
     source => 'puppet:///modules/data/handlers/logevent.rb',
   }
 
-  package { 'sensu-plugin':
-    ensure   => 'installed',
-    provider => 'gem',
-  }
+  $uchiwa_api_config = [{
+    host         => '127.0.0.1',
+    install_repo => true,
+    ssl          => false,
+    insecure     => true,
+    port         => 4567,
+    user         => '',
+    pass         => '',
+    path         => '',
+    timeout      => 5
+  }]
 
+  class { 'uchiwa':
+    sensu_api_endpoints => $uchiwa_api_config,
+  }
 }
 
 
@@ -82,15 +94,8 @@ node 'sensu-client' {
   class { 'sensu':
     rabbitmq_password => 'password',
     rabbitmq_host     => '33.33.33.90',
-    rabbitmq_port     => '5672',
     subscriptions     => 'sensu-test',
     plugins           => ['puppet:///modules/data/plugins/check-rspec.rb'],
-    require           => Package['sensu-plugin'],
-  }
-
-  package { 'ruby-devel':
-    ensure   => 'installed',
-    provider => 'yum',
   }
 
   package { 'sensu-plugin':
@@ -98,7 +103,7 @@ node 'sensu-client' {
     provider => 'gem',
   }
 
-  package { 'bundler':
+  package { 'rspec':
     ensure   => 'installed',
     provider => 'gem',
   }
@@ -108,13 +113,6 @@ node 'sensu-client' {
     provider => git,
     source   => 'https://github.com/bsnape/example-sensu-rspec-tests.git',
     revision => 'master',
-  }
-
-  exec { 'bundle install':
-    command => 'bundle install',
-    cwd     => '/tmp/example-sensu-rspec-tests',
-    returns => 0,
-    require => [Vcsrepo['/tmp/example-sensu-rspec-tests'], package['ruby-devel']]
   }
 
 }
