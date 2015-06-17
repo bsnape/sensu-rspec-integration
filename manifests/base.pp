@@ -4,9 +4,7 @@ node 'sensu-server' {
     epel_enable => true
   }
 
-  class { '::redis':
-    version => '2.8.13',
-  }
+  class { '::redis': }
 
   class { '::rabbitmq':
     require               => Class['::erlang'],
@@ -35,7 +33,6 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
-    version            => 'latest',
     rabbitmq_password  => 'password',
     rabbitmq_host      => 'sensu-server',
     install_repo       => false,
