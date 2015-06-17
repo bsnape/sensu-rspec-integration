@@ -33,13 +33,13 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
-    rabbitmq_password  => 'password',
-    rabbitmq_host      => 'sensu-server',
-    install_repo       => false,
-    client             => false,
-    server             => true,
-    api                => true,
-    require            => [Class['::rabbitmq'], Class['::redis']],
+    rabbitmq_password => 'password',
+    rabbitmq_host     => 'sensu-server',
+    install_repo      => false,
+    client            => false,
+    server            => true,
+    api               => true,
+    require           => [Class['::rabbitmq'], Class['::redis']],
   }
 
   package { 'sensu-plugin':
@@ -57,7 +57,7 @@ node 'sensu-server' {
 
   sensu::handler { 'default':
     type     => 'set',
-    command  => 'true',
+    command  => true,
     handlers => 'log_event',
   }
 
@@ -90,7 +90,7 @@ node 'sensu-server' {
 
 node 'sensu-client' {
 
-  Exec { path => "/bin:/sbin:/usr/bin:/usr/sbin" }
+  Exec { path => '/bin:/sbin:/usr/bin:/usr/sbin' }
 
   class { 'sensu':
     rabbitmq_password => 'password',
@@ -109,7 +109,7 @@ node 'sensu-client' {
     provider => 'gem',
   }
 
-  vcsrepo { "/tmp/example-sensu-rspec-tests":
+  vcsrepo { '/tmp/example-sensu-rspec-tests':
     ensure   => latest,
     provider => git,
     source   => 'https://github.com/bsnape/example-sensu-rspec-tests.git',
