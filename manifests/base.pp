@@ -110,8 +110,8 @@ node 'sensu-client' {
   }
 
   vcsrepo { '/tmp/example-sensu-rspec-tests':
-    ensure   => latest,
-    provider => git,
+    ensure   => 'latest',
+    provider => 'git',
     source   => 'https://github.com/bsnape/example-sensu-rspec-tests.git',
     revision => 'master',
   }
