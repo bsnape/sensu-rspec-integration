@@ -91,38 +91,29 @@ class CheckRspec < Sensu::Plugin::Check::CLI
 
     rspec_results = `#{cd} #{run}`
     parsed        = JSON.parse(rspec_results)
+    failures      = []
 
     parsed['examples'].each do |rspec_test|
       test_name = rspec_test['file_path'].split('/')[-1] + '_' + rspec_test['line_number'].to_s
       output    = rspec_test['full_description']
+      status    = rspec_test['status']
+      message   = rspec_test['exception']['message'] if rspec_test['exception']
 
-      if rspec_test['status'] == 'passed'
+      if status == 'passed' || status == 'pending'
         send_ok(test_name, output)
       else
-        send_warning(test_name, output)
+        send_warning(test_name, "#{output}, #{message}")
+        failures << "FAILURE: #{output},\n File: #{test_name},\n Message: #{message}\n"
       end
     end
 
     summary       = parsed['summary_line']
     failure_count = summary.split[2]
 
-    puts summary
-
     if failure_count == '0'
-      exit_with(:ok, summary)
+      ok summary
     else
-      exit_with(:critical, summary)
-    end
-  end
-
-  def exit_with(sym, message)
-    case sym
-      when :ok
-        ok message
-      when :critical
-        critical message
-      else
-        unknown message
+      critical "\n#{failures} #{summary}"
     end
   end
 
