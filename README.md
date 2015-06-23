@@ -2,9 +2,9 @@
 
 This is an example of how to integrate RSpec tests with Sensu.
 
-It uses the `check-rspec` Sensu check that I contributed to [Sensu Community Plugins](https://github.com/sensu/sensu-community-plugins/blob/master/plugins/rspec/check-rspec.rb).
+It uses a slight modification of the `check-rspec` Sensu check that I contributed to [Sensu Community Plugins](https://github.com/sensu/sensu-community-plugins/blob/master/plugins/rspec/check-rspec.rb).
 
-The Sensu version here is currently pinned to `0.11.0-1` which was before the built-in dashboard was deprecated.
+The Sensu version is `0.19.2-1` and dashboard (Uchiwa) is version `0.9.0-1`. You can change either of these in `hieradata/common.yaml`.
 
 If you require a Sensu sandbox VM, check out my [vagrant-sensu](https://github.com/bsnape/vagrant-sensu) repository.
 
@@ -12,7 +12,7 @@ If you require a Sensu sandbox VM, check out my [vagrant-sensu](https://github.c
 
 Install Ruby, Vagrant and VirtualBox.
 
-Install the gem dependencies:
+Then install the gem dependencies:
 
 ```bash
 $ bundle install
@@ -21,10 +21,10 @@ $ bundle install
 Install the Puppet modules:
 
 ```
-$ librarian-puppet install
+$ bundle exec librarian-puppet install
 ```
 
-Bring up the VMs (will take a while):
+Bring up the VMs (this will take a while):
 
 ```bash
 $ vagrant up
@@ -32,7 +32,7 @@ $ vagrant up
 
 ## Usage
 
-Once the 2 VMs are up and running, navigate to the (deprecated) [Sensu dashboard](http://33.33.33.90:8080/).
+Once the 2 VMs (server and client) are up and running, navigate to the [Sensu dashboard](http://33.33.33.90:3000/).
 
 Here you can see the two separate warning alerts for failed tests and an overall critical alert
 displaying the summary of how many tests have failed.
