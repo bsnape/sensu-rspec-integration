@@ -116,6 +116,10 @@ node 'sensu-client' {
     revision => 'master',
   }
 
+  class { 'nginx':
+    service_ensure => 'stopped',
+  }
+
   class { 'timezone':
     timezone => 'UTC',
   }
